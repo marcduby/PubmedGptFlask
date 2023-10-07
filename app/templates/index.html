@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Gene Set Pubmed</title>
+    </head>
+    <body>
+        <img src="">
+        <br>
+        <form action="submit_genes" method="post">
+            <p>Enter the set of genes separated by commas</p>
+            <br>
+            <input type="text" name="input_gene_set">
+            <br>
+            <input type="submit" value="Submit Genes" id="submit_genes">
+
+
+            <br>
+            {% for message in get_flashed_messages(category_filter=['list_missing']) %}
+                <p> {{message}} </p>
+            {% endfor %}
+        </form>
+    </body>
+</html>
