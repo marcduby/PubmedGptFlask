@@ -23,10 +23,15 @@ Please read through the abstracts and as a genetics researcher write a 200 word 
 """
 
 PROMPT_BIOLOGY = """
-Below are the abstracts from different research papers on the genes {}. 
-Please read through the abstracts and as a genetics researcher write a 200 word summary that synthesizes the key findings on the common biology of the genes {}
+Below are the biological research summaries on the genes {}. 
+Please read through the summaries and as a genetics researcher write a 300 word summary that synthesizes the key findings on the common biology of the genes {}
 {}
 """
+# PROMPT_BIOLOGY = """
+# Below are the abstracts from different research papers on the genes {}. 
+# Please read through the abstracts and as a genetics researcher write a 200 word summary that synthesizes the key findings on the common biology of the genes {}
+# {}
+# """
 
 # methods
 def get_prompt(prompt_template, str_gene, str_abstract, log=False):

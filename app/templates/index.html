@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Gene Set Pubmed</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     </head>
     <body>
         <img src="">
@@ -16,9 +17,15 @@
 
 
             <br>
-            {% for message in get_flashed_messages(category_filter=['list_missing']) %}
+            {% for message in get_flashed_messages(category_filter=['list_genes_used']) %}
+                <strong>Genes found and used for the abstracts</strong>
                 <p> {{message}} </p>
+            {% endfor %}
+            {% for message in get_flashed_messages(category_filter=['abstract_biology']) %}
+                <strong>Biology abstract</strong>
+                <p> <div>{{message}}</div> </p>
             {% endfor %}
         </form>
     </body>
 </html>
+

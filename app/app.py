@@ -20,9 +20,21 @@ def submit_genes():
     list_abstracts = []
     abstract_gpt = "no abstract"
     prompt_gpt = "no prompt"
+    list_gene_llm = []
+    list_abstract_llm = []
+    biology_abstract = ""
+    input_genes = ""
 
     # get the input
-    input_genes = str(request.form["input_gene_set"])
+    if request.method == 'POST':
+        input_genes = str(request.form["input_gene_set"])
+  
+    else:
+        if request.args.get('input_gene_set'):
+            input_genes = str(request.args.get('input_gene_set'))
+
+    print("got request: {} with inputs: {}".format(request.method, input_genes))
+
 
     # split the genes into list
     if input_genes:
@@ -50,10 +62,6 @@ def submit_genes():
         list_abstracts = get_list_abstracts(conn=conn, list_genes=list_select, log=True)
 
         if list_abstracts and len(list_abstracts) > 0:
-            # build the inputs for the LLM call
-            list_gene_llm = []
-            list_abstract_llm = []
-
             for item in list_abstracts:
                 list_gene_llm.append(item.get('gene'))
                 list_abstract_llm.append(item.get('abstract'))
@@ -66,18 +74,22 @@ def submit_genes():
             print("\ngot abstracts: {}".format(str_abstract))
 
             # call the LLM
-            str_chat = ml_utils.call_llm(prompt_template=ml_utils.PROMPT_BIOLOGY, str_gene=str_gene, str_abstract=str_abstract, log=True)
-            print("got LLM result: \n{}".format(str_chat))
+            biology_abstract = ml_utils.call_llm(prompt_template=ml_utils.PROMPT_BIOLOGY, str_gene=str_gene, str_abstract=str_abstract, log=True)
+            print("got LLM result: \n{}".format(biology_abstract))
 
 
     else:
         print("no input genes")
 
     # add data for return 
-    flash(list_genes, 'list_genes')
-    flash(list_genes_missing, 'list_missing')
-    flash(prompt_gpt, 'prompt')
-    flash(abstract_gpt, 'abstract')
+    flash(list_gene_llm, 'list_genes_used')
+    flash(biology_abstract, 'abstract_biology')
+    # flash(list_genes_missing, 'list_missing')
+    # flash(prompt_gpt, 'prompt')
+    # flash(abstract_gpt, 'abstract')
 
     return render_template("index.html")
 
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=8081)
