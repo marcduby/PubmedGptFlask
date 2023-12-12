@@ -17,16 +17,16 @@
 
 
             <br>
+            {% for message in get_flashed_messages(category_filter=['list_genes_input']) %}
+                <strong>Genes entered by the user</strong>
+                <p> {{message}} </p>
+            {% endfor %}
             {% for message in get_flashed_messages(category_filter=['list_genes_used']) %}
                 <strong>Genes found and used for the abstracts</strong>
                 <p> {{message}} </p>
             {% endfor %}
             {% for message in get_flashed_messages(category_filter=['abstract_biology']) %}
                 <strong>Biology abstract</strong>
-                <p> <div>{{message}}</div> </p>
-            {% endfor %}
-            {% for message in get_flashed_messages(category_filter=['abstract_pathway']) %}
-                <strong>Pathway abstract</strong>
                 <p> <div>{{message}}</div> </p>
             {% endfor %}
         </form>

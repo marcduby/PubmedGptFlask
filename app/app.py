@@ -43,22 +43,6 @@ def submit_genes():
         list_temp = input_genes.split(",")
         list_select = []
 
-        # # for each entry, strip spaces, search for gene search, get final abstract
-        # for value in list_temp:
-        #     gene = value.strip()
-        #     print("got gene: -{}-".format(gene))
-        #     list_select.append(gene)
-
-        #     # TODO get the abstract from the DB
-        #     abstract = None
-
-        #     if abstract:
-        #         list_genes.append(gene)
-        #         list_abstracts.append(abstract)
-
-        #     else:
-        #         list_genes_missing.append(gene)
-
         for value in list_temp:
             gene = value.strip()
             print("got gene: -{}-".format(gene))
@@ -68,18 +52,6 @@ def submit_genes():
         conn = get_connection()
         # list_abstracts = get_list_abstracts(conn=conn, list_genes=list_select, log=True)
         map_gene_abstracts = get_map_gene_abstracts(conn=conn, list_genes=list_select, log=True)
-
-        # if list_abstracts and len(list_abstracts) > 0:
-        #     for item in list_abstracts:
-        #         list_gene_llm.append(item.get('gene'))
-        #         list_abstract_llm.append(item.get('abstract'))
-            
-        #     # build the prompt inputs
-        #     str_gene = ",".join(list_gene_llm)
-        #     str_abstract = "\n".join(list_abstract_llm)
-
-        #     print("got genes: {}".format(str_gene))
-        #     print("\ngot abstracts: {}".format(str_abstract))
 
         if map_gene_abstracts and len(map_gene_abstracts) > 0:
             # build the prompt inputs
@@ -91,9 +63,10 @@ def submit_genes():
 
             # call the LLM
             # biology_abstract = ml_utils.call_llm(prompt_template=ml_utils.PROMPT_BIOLOGY, str_gene=str_gene, str_abstract=str_abstract, log=True)
-            biology_abstract = ml_utils.call_gene_abstract_llm_recurisve(prompt_template=ml_utils.PROMPT_BIOLOGY, map_gene_abstracts=map_gene_abstracts, max_tokens=1000, log=True)
+            biology_abstract = ml_utils.call_gene_abstract_llm_recurisve(prompt_template=ml_utils.PROMPT_BIOLOGY, map_gene_abstracts=map_gene_abstracts, max_tokens=4000, log=True)
             print("\n\ngot biology LLM result: \n{}".format(biology_abstract))
 
+            list_gene_llm = list(map_gene_abstracts.keys())
             # # call the LLM
             # pathway_abstract = ml_utils.call_llm(prompt_template=ml_utils.PROMPT_PATHWAYS, str_gene=str_gene, str_abstract=str_abstract, log=True)
             # print("\n\ngot biology LLM result: \n{}".format(biology_abstract))
@@ -102,6 +75,7 @@ def submit_genes():
         print("no input genes")
 
     # add data for return 
+    flash(list_select, 'list_genes_input')
     flash(list_gene_llm, 'list_genes_used')
     flash(biology_abstract, 'abstract_biology')
     flash(pathway_abstract, 'abstract_pathway')
