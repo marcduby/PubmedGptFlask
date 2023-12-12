@@ -25,6 +25,10 @@
                 <strong>Biology abstract</strong>
                 <p> <div>{{message}}</div> </p>
             {% endfor %}
+            {% for message in get_flashed_messages(category_filter=['abstract_pathway']) %}
+                <strong>Pathway abstract</strong>
+                <p> <div>{{message}}</div> </p>
+            {% endfor %}
         </form>
     </body>
 </html>

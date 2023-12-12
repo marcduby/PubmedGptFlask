@@ -11,8 +11,8 @@ MODEL_CHATGPT="gpt-3.5-turbo-0301"
 
 # prompts
 PROMPT_PATHWAYS = """
-Below are the abstracts from different research papers on the genes {}. 
-Please read through the abstracts and as a genetics researcher write a 200 word summary that synthesizes the key findings on the commonality of biological pathways of the genes {}
+Below are the biological research summaries on the genes {}. 
+Please read through the summaries and as a genetics researcher write a 200 word summary that synthesizes the key common findings on biological pathways of the genes {}
 {}
 """
 
@@ -102,18 +102,19 @@ def call_chatgpt(str_query, log=False):
     return str_result
 
 
-def call_gene_abstract_llm_recurisve(llm, map_gene_abstracts, max_tokens=4000, shuffle=True, log=False):
+def call_gene_abstract_llm_recurisve(prompt_template, map_gene_abstracts, max_tokens=4000, to_shuffle=True, log=False):
     ''' 
     method to call llm recursively depending on token size
     '''
     # initialize
-    str_genes = ""
-    str_abstracts = ""
     map_temp_abstracts = {}
     map_llm_result = {}
 
-    # shuffle list if needed
+    # log
+    if log:
+        print("recursive {} token LLM call for genes: {}".format(max_tokens, map_gene_abstracts.keys()))
 
+    # shuffle list if needed
 
     # loop and build map entries
     count_tokens = 0
@@ -128,33 +129,35 @@ def call_gene_abstract_llm_recurisve(llm, map_gene_abstracts, max_tokens=4000, s
 
         else:
             # add to map
-            map_temp_abstracts[get_delimited_string(list_items=list_temp_gene, delimiter=",")] = get_delimited_string(list_items=str_abstracts, delimiter="\n")
+            map_temp_abstracts[get_delimited_string(list_items=list_temp_gene, delimiter=",")] = get_delimited_string(list_items=list_temp_abstract, delimiter="\n")
 
             # reinitialize
             count_tokens = len(value_abstract.split())
-            list_temp_abstract = [key_gene]
+            list_temp_gene = [key_gene]
             list_temp_abstract = [value_abstract]
 
     # add last entry to map
     if count_tokens > 0:
-        map_temp_abstracts[get_comma_string(list_temp_gene)] = get_comma_string(str_abstracts)
+        map_temp_abstracts[get_delimited_string(list_items=list_temp_gene)] = get_delimited_string(list_items=list_temp_abstract, delimiter="\n")
 
     # llm call and put result in map
     for key_gene, value_abstract in map_temp_abstracts.items():
-        result_abstract = call_llm(prompt_template=PROMPT_BIOLOGY, str_gene=key_genes, str_abstract=value_abstract)
+        result_abstract = call_llm(prompt_template=prompt_template, str_gene=key_gene, str_abstract=value_abstract)
+        # result_abstract = "gene set: {}\n".format(key_gene)
         map_llm_result[key_gene] = result_abstract
 
     # if map lenghth is 1, then return, or else recursive call with each element
     if len(map_llm_result) == 1:
-        return "map_value"
+        return list(map_llm_result.values())[0]
+    
     else:
-        return call_gene_abstract_llm_recurisve(llm=llm, map_gene_abstracts=map_llm_result, max_tokens=max_tokens, shuffle=shuffle, log=log)
+        return call_gene_abstract_llm_recurisve(prompt_template=prompt_template, map_gene_abstracts=map_llm_result, max_tokens=max_tokens, to_shuffle=to_shuffle, log=log)
         
 def get_delimited_string(list_items, delimiter=",", log=False):
     ''' 
     creates a comma delimited string from the given list
     '''
-    return str(list_items)
+    return delimiter.join(list_items)
 
 
 
