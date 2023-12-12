@@ -63,7 +63,7 @@ def submit_genes():
 
             # call the LLM
             # biology_abstract = ml_utils.call_llm(prompt_template=ml_utils.PROMPT_BIOLOGY, str_gene=str_gene, str_abstract=str_abstract, log=True)
-            biology_abstract = ml_utils.call_gene_abstract_llm_recurisve(prompt_template=ml_utils.PROMPT_BIOLOGY, map_gene_abstracts=map_gene_abstracts, max_tokens=4000, log=True)
+            biology_abstract = ml_utils.call_gene_abstract_llm_recurisve(prompt_template=ml_utils.PROMPT_BIOLOGY, map_gene_abstracts=map_gene_abstracts, max_tokens=2500, log=True)
             print("\n\ngot biology LLM result: \n{}".format(biology_abstract))
 
             list_gene_llm = list(map_gene_abstracts.keys())

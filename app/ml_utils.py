@@ -127,6 +127,9 @@ def call_gene_abstract_llm_recurisve(prompt_template, map_gene_abstracts, max_to
             list_temp_abstract.append(value_abstract)
             count_tokens = count_tokens + len(value_abstract.split())
 
+            if log:
+                print("Added to tokens length: {}".format(count_tokens))
+
         else:
             # add to map
             map_temp_abstracts[get_delimited_string(list_items=list_temp_gene, delimiter=",")] = get_delimited_string(list_items=list_temp_abstract, delimiter="\n")
@@ -135,6 +138,9 @@ def call_gene_abstract_llm_recurisve(prompt_template, map_gene_abstracts, max_to
             count_tokens = len(value_abstract.split())
             list_temp_gene = [key_gene]
             list_temp_abstract = [value_abstract]
+
+            if log:
+                print("Reset tokens length to: {}".format(count_tokens))
 
     # add last entry to map
     if count_tokens > 0:
