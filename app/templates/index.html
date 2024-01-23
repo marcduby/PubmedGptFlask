@@ -16,7 +16,7 @@
             <input type="submit" value="Submit Genes" id="submit_genes">
 
 
-            <br>
+            <p/>
             {% for message in get_flashed_messages(category_filter=['list_genes_input']) %}
                 <strong>Genes entered by the user</strong>
                 <p> {{message}} </p>
@@ -27,6 +27,10 @@
             {% endfor %}
             {% for message in get_flashed_messages(category_filter=['abstract_biology']) %}
                 <strong>Biology abstract</strong>
+                <p> <div>{{message}}</div> </p>
+            {% endfor %}
+            {% for message in get_flashed_messages(category_filter=['no_abstract_biology']) %}
+                <strong>Default LLM answer</strong>
                 <p> <div>{{message}}</div> </p>
             {% endfor %}
         </form>

@@ -22,11 +22,28 @@ Please read through the abstracts and as a genetics researcher write a 200 word 
 {}
 """
 
-PROMPT_BIOLOGY = """
-Below are the biological research summaries on the genes {}. 
-Please read through the summaries and as a genetics researcher write a 300 word summary that synthesizes the key findings on the common biology of the genes {}
+PROMPT_GENERIC_CHATGPT = """
+As a genetics researcher write a 300 word summary that synthesizes the common key findings on the biology of the genes {} as a set
+"""
+
+# not working well
+PROMPT_BIOLOGY_EXPANDED = """
+As a genetics researcher investigating gene set {}, please summarize the common biological characteristics and functions of the following gene set based only on the information provided: {}. The provided information is:
 {}
 """
+
+PROMPT_BIOLOGY = """
+Below are research summaries on the genes {}. 
+Please read through the summaries and as a genetics researcher write a 300 word summary that synthesizes the common key findings on the biology of the genes {} as a set
+{}
+Set the temperature to 0.1
+"""
+
+# PROMPT_BIOLOGY = """
+# Below are the biological research summaries on the genes {}. 
+# Please read through the summaries and as a genetics researcher write a 300 word summary that synthesizes the key findings on the common biology of the genes {}
+# {}
+# """
 # PROMPT_BIOLOGY = """
 # Below are the abstracts from different research papers on the genes {}. 
 # Please read through the abstracts and as a genetics researcher write a 200 word summary that synthesizes the key findings on the common biology of the genes {}
@@ -47,6 +64,26 @@ def get_prompt(prompt_template, str_gene, str_abstract, log=False):
 
     # return
     return result
+
+def call_llm_no_abstracts(str_gene, prompt_template=PROMPT_GENERIC_CHATGPT, log=False):
+    '''
+    call chat gpt without abstracts 
+    '''
+    # initialize
+    str_chat = ""
+
+    # get the prompt
+    str_prompt = prompt_template.format(str_gene)
+
+    # get the result
+    str_chat = call_chatgpt(str_query=str_prompt, log=True)
+
+    # log
+    if log:
+        print("for genes: {}, got no abstract result: \n{}".format(str_gene, str_chat))
+
+    # return
+    return str_chat
 
 def call_llm(prompt_template, str_gene, str_abstract, log=False):
     '''

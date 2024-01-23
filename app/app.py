@@ -71,6 +71,9 @@ def submit_genes():
             # pathway_abstract = ml_utils.call_llm(prompt_template=ml_utils.PROMPT_PATHWAYS, str_gene=str_gene, str_abstract=str_abstract, log=True)
             # print("\n\ngot biology LLM result: \n{}".format(biology_abstract))
 
+            # call the defaultt chatGPT answer
+            biology_no_abstracts = ml_utils.call_llm_no_abstracts(str_gene=str_gene, log=True)
+
     else:
         print("no input genes")
 
@@ -78,7 +81,8 @@ def submit_genes():
     flash(list_select, 'list_genes_input')
     flash(list_gene_llm, 'list_genes_used')
     flash(biology_abstract, 'abstract_biology')
-    flash(pathway_abstract, 'abstract_pathway')
+    flash(biology_no_abstracts, 'no_abstract_biology')
+    # flash(pathway_abstract, 'abstract_pathway')
     # flash(list_genes_missing, 'list_missing')
     # flash(prompt_gpt, 'prompt')
     # flash(abstract_gpt, 'abstract')
